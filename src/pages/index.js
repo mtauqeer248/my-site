@@ -2,6 +2,7 @@ import React from 'react';
 import { useQuery, useMutation } from '@apollo/client';
 import gql from 'graphql-tag';
 import "./style.css";
+import TaskList from '../components/TaskList'
 
 // This query is executed at run time by Apollo.
 const GET_TODOS = gql`
@@ -21,6 +22,7 @@ const ADD_TODO = gql`
     }
 `
 
+
 export default function Home() {
     let inputText;
 
@@ -34,9 +36,16 @@ export default function Home() {
         })
         inputText.value = "";
     }
-    
-
-
+    const handleDelete = (id) => {
+        console.log(JSON.stringify(id));
+        deleteTask({
+            variables: {
+                id: id,
+            },
+            refetchQueries: [{ query: GET_TODOS }],
+        });
+    };
+ 
     const { loading, error, data } = useQuery(GET_TODOS);
 
     if (loading)
@@ -61,7 +70,7 @@ export default function Home() {
 
             <h3>My TODO LIST</h3>
 
-            <table border="2">
+           {/* <table border="2">
                 <thead>
                     <tr>
                         <th>ID</th>
@@ -76,11 +85,13 @@ export default function Home() {
                             <td> {todo.id} </td>
                             <td> {todo.task} </td>
                             <td> {todo.status.toString()} </td>
+                            <td onClick={() => handleDelete(todo.id)}>Delete</td>
                            
                         </tr>
                     })}
                 </tbody>
-            </table>
+                </table>*/}
+                <TaskList/>
 
         </div>
     );
